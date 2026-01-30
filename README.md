@@ -41,6 +41,16 @@ Open http://localhost:3000 (or the port shown in the console; Heroku sets `PORT`
 - **Save preset**: downloads a `.json` file with current values.
 - **Load preset**: upload a `.json` file or a legacy `.pmp` (line-by-line) file.
 
+## Scale Finder
+
+In the **Notes** panel, the Scale Finder lets you build note sets from key, mode, and chords instead of typing them by hand:
+
+- **Key** — Sets the base note (e.g. C → C-4). Choose from the 12 chromatic roots.
+- **Scale** — Choose a mode (e.g. Major, Harmonic Minor, Dorian); the scale notes are shown in a read-only field.
+- **Chords** — A grid of chords (I through vii) valid in the current key and scale. Click a chord to **toggle** it; selected chords are highlighted. **Other notes** is filled with the **unique** set of note names from all selected chords (with octave -4). You can select multiple chords to combine their notes.
+
+Manual entry in Base note and Other notes still works; the Scale Finder simply fills those fields so you can edit or mix with typed notes.
+
 ## Original app
 
 The desktop app was C++/FLTK (Windows); this web app reimplements the same generator algorithm in Node/Express and a static frontend.
