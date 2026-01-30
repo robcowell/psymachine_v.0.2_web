@@ -19,8 +19,21 @@
     <main class="main">
       <section class="panel notes-panel">
         <h2>Notes</h2>
-        <label>Base note <input type="text" id="baseNote" value="E-4" placeholder="E-4"></label>
-        <label>Other notes <input type="text" id="otherNotes" value="F-4 A-4 B-4 E-5 F-5 A-5 B-5 E-6" placeholder="F-4 A-4 B-4 …"></label>
+        <div class="notes-manual">
+          <label>Base note <input type="text" id="baseNote" value="E-4" placeholder="E-4"></label>
+          <label>Other notes <input type="text" id="otherNotes" value="F-4 A-4 B-4 E-5 F-5 A-5 B-5 E-6" placeholder="F-4 A-4 B-4 …"></label>
+        </div>
+        <div class="scale-finder">
+          <h3>Scale finder</h3>
+          <div class="scale-finder-row">
+            <label>Key <select id="scaleKey"></select></label>
+            <label>Scale <select id="scaleMode"></select></label>
+          </div>
+          <label>Scale notes <input type="text" id="scaleNotesDisplay" readonly></label>
+          <div class="chord-grid-header">Chords</div>
+          <div id="chordGrid" class="chord-grid" aria-label="Chord selection"></div>
+          <div id="chordInfo" class="chord-info" aria-live="polite"></div>
+        </div>
       </section>
 
       <section class="panel percents-panel">
@@ -72,6 +85,7 @@
       </section>
     </main>
   </div>
+  <script src="/scale-data.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

@@ -187,5 +187,120 @@
     this.value = '';
   });
 
+  /* Scale finder: Key sets base note; multi-select chords → unique notes in other notes */
+  const OCTAVE = '4';
+  const selectedChords = new Set();
+
+  function chordKey(chordRootNote, chordIdx) {
+    return chordRootNote + ',' + chordIdx;
+  }
+
+  function applySelectedChordsToOtherNotes() {
+    const keyName = document.getElementById('scaleKey') && document.getElementById('scaleKey').value;
+    if (!keyName || typeof ScaleData === 'undefined') return;
+    const seen = new Set();
+    const noteNames = [];
+    selectedChords.forEach(key => {
+      const [root, idx] = key.split(',').map(Number);
+      ScaleData.getChordNoteNames(root, idx).forEach(n => {
+        if (!seen.has(n)) { seen.add(n); noteNames.push(n); }
+      });
+    });
+    const otherNotesEl = document.getElementById(ids.otherNotes);
+    if (otherNotesEl) otherNotesEl.value = noteNames.map(n => n + '-' + OCTAVE).join(' ');
+    const infoEl = document.getElementById('chordInfo');
+    if (infoEl) {
+      if (selectedChords.size === 0) infoEl.textContent = '';
+      else infoEl.textContent = selectedChords.size + ' chord(s) selected – ' + noteNames.join(', ');
+    }
+  }
+
+  function initScaleFinder() {
+    if (typeof ScaleData === 'undefined') return;
+    const keySelect = document.getElementById('scaleKey');
+    const scaleSelect = document.getElementById('scaleMode');
+    if (!keySelect || !scaleSelect) return;
+    ScaleData.notes.forEach(n => {
+      const o = document.createElement('option');
+      o.value = n;
+      o.textContent = n;
+      keySelect.appendChild(o);
+    });
+    ScaleData.scales.forEach((s, i) => {
+      const o = document.createElement('option');
+      o.value = String(i);
+      o.textContent = s.name;
+      scaleSelect.appendChild(o);
+    });
+    keySelect.value = 'C';
+    scaleSelect.value = '2';
+    document.getElementById(ids.baseNote).value = 'C-' + OCTAVE;
+
+    function updateScaleDisplay() {
+      const keyName = keySelect.value;
+      const scaleIdx = parseInt(scaleSelect.value, 10) || 0;
+      const root = ScaleData.keyToRoot[keyName];
+      const scale = ScaleData.scales[scaleIdx];
+      if (root == null || !scale) return;
+
+      document.getElementById(ids.baseNote).value = keyName + '-' + OCTAVE;
+
+      selectedChords.clear();
+      const scaleNotes = ScaleData.getScaleNotes(root, scale);
+      const displayEl = document.getElementById('scaleNotesDisplay');
+      if (displayEl) displayEl.value = scaleNotes.join(', ');
+      const valid = ScaleData.getValidChordsForScale(root, scale);
+      const gridEl = document.getElementById('chordGrid');
+      if (!gridEl) return;
+      gridEl.innerHTML = '';
+      valid.forEach(col => {
+        const colEl = document.createElement('div');
+        colEl.className = 'chord-column';
+        const romanEl = document.createElement('div');
+        romanEl.className = 'roman';
+        romanEl.textContent = col.roman;
+        colEl.appendChild(romanEl);
+        col.chords.forEach(c => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'chord-btn';
+          btn.textContent = c.label;
+          btn.dataset.chordRootNote = String(c.chordRootNote);
+          btn.dataset.chordIdx = String(c.chordIdx);
+          const key = chordKey(c.chordRootNote, c.chordIdx);
+          if (selectedChords.has(key)) btn.classList.add('selected');
+          btn.addEventListener('click', () => {
+            const chordRootNote = c.chordRootNote;
+            const chordIdx = c.chordIdx;
+            const key = chordKey(chordRootNote, chordIdx);
+            if (selectedChords.has(key)) {
+              selectedChords.delete(key);
+              btn.classList.remove('selected');
+            } else {
+              selectedChords.add(key);
+              btn.classList.add('selected');
+            }
+            applySelectedChordsToOtherNotes();
+          });
+          colEl.appendChild(btn);
+        });
+        gridEl.appendChild(colEl);
+      });
+      applySelectedChordsToOtherNotes();
+    }
+
+    keySelect.addEventListener('change', () => {
+      document.getElementById(ids.baseNote).value = keySelect.value + '-' + OCTAVE;
+      selectedChords.clear();
+      updateScaleDisplay();
+    });
+    scaleSelect.addEventListener('change', () => {
+      selectedChords.clear();
+      updateScaleDisplay();
+    });
+    updateScaleDisplay();
+  }
+
   fetch('/api/preset/default').then(r => r.json()).then(setParams).catch(() => {});
+  initScaleFinder();
 })();
