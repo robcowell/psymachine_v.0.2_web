@@ -1,0 +1,9 @@
+{
+  "name": "Psymachine",
+  "description": "Renoise pattern generator (Psymachine v.0.2)",
+  "repository": "https://github.com/your-username/psymachine",
+  "keywords": ["renoise", "pattern", "generator", "music"],
+  "buildpacks": [
+    { "url": "heroku/nodejs" }
+  ]
+}

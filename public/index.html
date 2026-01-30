@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Psymachine v.0.2</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>Psymachine <span class="version">v.0.2</span></h1>
+      <p class="tagline">Renoise pattern generator</p>
+    </header>
+
+    <main class="main">
+      <section class="panel notes-panel">
+        <h2>Notes</h2>
+        <label>Base note <input type="text" id="baseNote" value="E-4" placeholder="E-4"></label>
+        <label>Other notes <input type="text" id="otherNotes" value="F-4 A-4 B-4 E-5 F-5 A-5 B-5 E-6" placeholder="F-4 A-4 B-4 …"></label>
+      </section>
+
+      <section class="panel percents-panel">
+        <h2>Percents</h2>
+        <div class="grid">
+          <label>Base note % <input type="number" id="baseNoteP" min="0" max="100" value="40"></label>
+          <label>Other notes % <input type="number" id="otherNotesP" min="0" max="100" value="50"></label>
+          <label>Remove note % <input type="number" id="removeNoteP" min="0" max="100" value="5"></label>
+          <label>Add new note % <input type="number" id="addNoteP" min="0" max="100" value="20"></label>
+          <label>Change note % <input type="number" id="changeNoteP" min="0" max="100" value="20"></label>
+          <label>Note off % <input type="number" id="noteOffP" min="0" max="100" value="40"></label>
+          <label>Note off variation % <input type="number" id="noteOffVariationP" min="0" max="100" value="20"></label>
+          <label>Note flutter % <input type="number" id="noteFlutterP" min="0" max="100" value="20"></label>
+        </div>
+      </section>
+
+      <section class="panel params-panel">
+        <h2>Parameters</h2>
+        <div class="params-row">
+          <label>Track length <input type="number" id="trackLen" min="1" value="256"></label>
+          <label>Arpeggio length <input type="number" id="arpeggioLen" min="1" value="64"></label>
+          <label>Instrument number <input type="text" id="instrumentNumber" value="0"></label>
+          <label>Ticks per beat <input type="number" id="ticksPerBeat" min="1" value="8"></label>
+        </div>
+        <div class="checkboxes">
+          <label class="checkbox"><input type="checkbox" id="noteOffOnBeat"> Note off on beat</label>
+          <label class="checkbox"><input type="checkbox" id="noteOnFirstTick"> Note on first tick</label>
+        </div>
+      </section>
+
+      <section class="panel actions-panel">
+        <div class="actions">
+          <button type="button" id="btnGenerate" class="btn btn-primary">Generate</button>
+          <label class="seed-label">Seed <input type="number" id="seed" value="0" step="1"></label>
+          <button type="button" id="btnRandomize" class="btn btn-secondary">Randomize</button>
+          <button type="button" id="btnSavePreset" class="btn btn-secondary">Save preset</button>
+          <button type="button" id="btnLoadPreset" class="btn btn-secondary">Load preset</button>
+          <input type="file" id="presetFile" accept=".json,.pmp" hidden>
+        </div>
+      </section>
+
+      <section class="panel output-panel">
+        <div class="output-header">
+          <h2>Renoise XML</h2>
+          <button type="button" id="btnCopy" class="btn btn-small">Copy to clipboard</button>
+        </div>
+        <pre id="output" class="output" aria-live="polite"></pre>
+        <p id="message" class="message" role="alert" hidden></p>
+      </section>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

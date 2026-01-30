@@ -1,0 +1,16 @@
+{
+  "name": "psymachine-web",
+  "version": "0.2.0",
+  "description": "Psymachine v.0.2 - Renoise pattern generator web app",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.x"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

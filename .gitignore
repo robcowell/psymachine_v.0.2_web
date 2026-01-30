@@ -1,0 +1,6 @@
+FL/*
+*.cpp
+*.h
+Makefile.win
+psymachine.dev
+psymachine.layout
