@@ -1,16 +1,54 @@
+/* Skeuomorphic brushed steel theme */
+
 :root {
-  --bg: #0f0e12;
-  --surface: #1a1820;
-  --border: #2d2a35;
-  --text: #e8e4ef;
-  --muted: #8b8499;
-  --accent: #b794f6;
-  --accent-hover: #c4a8f7;
-  --success: #68d391;
-  --error: #fc8181;
-  --radius: 8px;
+  /* Steel palette */
+  --steel-dark: #2a2d32;
+  --steel-mid: #4a4e55;
+  --steel-base: #5c6068;
+  --steel-light: #7a7f88;
+  --steel-highlight: #9ca0a8;
+  --steel-shine: #b8bcc4;
+  --steel-shadow: #1e2124;
+  --steel-inset: #25282d;
+  /* Bevels */
+  --bevel-light: rgba(255, 255, 255, 0.25);
+  --bevel-dark: rgba(0, 0, 0, 0.35);
+  /* Accent (metallic blue-green) */
+  --accent: #5a9fb5;
+  --accent-light: #7eb8cc;
+  --accent-dark: #3d7a8c;
+  --success: #5a9f7a;
+  --error: #b55a5a;
+  --radius: 6px;
   --font-sans: 'Outfit', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  /* Blue LED dot-matrix display (80s/90s stereo / music hardware) */
+  --led-blue: #00d4ff;
+  --led-blue-dim: #0099bb;
+  --led-glow: rgba(0, 212, 255, 0.5);
+  --dot-matrix-unlit: rgba(0, 40, 55, 0.6);
+  --dot-matrix-grid: 5px 7px; /* dot spacing – 5×7 matrix feel */
+}
+
+/* HD44780 LCD dot-matrix font – Hitachi controller used in 80s/90s stereos & gear */
+@font-face {
+  font-family: 'HD44780';
+  src: url('https://cdn.jsdelivr.net/gh/epernia/HD44780_LCD_webfont@master/HD44780.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Brushed grain: horizontal fine lines (repeating gradient) */
+.steel-grain {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 1px,
+    rgba(255, 255, 255, 0.015) 1px,
+    rgba(255, 255, 255, 0.015) 2px
+  );
+  pointer-events: none;
 }
 
 * {
@@ -20,21 +58,62 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background: var(--bg);
-  color: var(--text);
   min-height: 100vh;
   line-height: 1.5;
+  /* Dark brushed metal background */
+  background: var(--steel-shadow);
+  background-image:
+    linear-gradient(180deg,
+      var(--steel-mid) 0%,
+      var(--steel-dark) 15%,
+      var(--steel-shadow) 50%,
+      var(--steel-dark) 85%,
+      var(--steel-mid) 100%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      rgba(0, 0, 0, 0.08) 2px,
+      rgba(0, 0, 0, 0.08) 3px
+    );
+  background-blend-mode: overlay;
+  color: #d8dce0;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 1px,
+    rgba(255, 255, 255, 0.012) 1px,
+    rgba(255, 255, 255, 0.012) 2px
+  );
+  pointer-events: none;
+  z-index: 0;
 }
 
 .app {
   max-width: 720px;
   margin: 0 auto;
   padding: 1.5rem;
+  position: relative;
+  z-index: 1;
 }
 
+/* Header: engraved text look */
 .header {
   text-align: center;
   margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 50%, rgba(0,0,0,0.15) 100%);
+  border-radius: var(--radius);
+  border: 1px solid var(--bevel-dark);
+  box-shadow: inset 0 1px 0 var(--bevel-light);
 }
 
 .header h1 {
@@ -42,17 +121,21 @@ body {
   font-weight: 600;
   margin: 0;
   letter-spacing: 0.02em;
+  color: var(--steel-shine);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.5), 0 -1px 0 rgba(255,255,255,0.1);
 }
 
 .version {
-  color: var(--muted);
+  color: var(--steel-light);
   font-weight: 400;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.4);
 }
 
 .tagline {
   margin: 0.25rem 0 0;
-  color: var(--muted);
+  color: var(--steel-mid);
   font-size: 0.9rem;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.3);
 }
 
 .main {
@@ -61,11 +144,42 @@ body {
   gap: 1rem;
 }
 
+/* Panels: raised brushed steel */
 .panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  position: relative;
   padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--bevel-dark);
+  box-shadow:
+    inset 0 1px 0 var(--bevel-light),
+    inset 0 -1px 0 rgba(0,0,0,0.2),
+    0 2px 4px rgba(0,0,0,0.3);
+  /* Brushed steel fill */
+  background: linear-gradient(180deg,
+    var(--steel-light) 0%,
+    var(--steel-base) 8%,
+    var(--steel-mid) 25%,
+    var(--steel-base) 50%,
+    var(--steel-mid) 75%,
+    var(--steel-base) 92%,
+    var(--steel-dark) 100%
+  );
+  overflow: hidden;
+}
+
+.panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 2px,
+    rgba(255, 255, 255, 0.03) 2px,
+    rgba(255, 255, 255, 0.03) 3px
+  );
+  pointer-events: none;
 }
 
 .panel h2 {
@@ -73,32 +187,64 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--muted);
+  color: var(--steel-shine);
   margin: 0 0 0.75rem;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.6), 0 -1px 1px rgba(0,0,0,0.4);
 }
 
 .panel label {
   display: block;
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
+  color: var(--steel-shine);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5), 0 -1px 1px rgba(0,0,0,0.35);
 }
 
 .panel label:last-child {
   margin-bottom: 0;
 }
 
+/* Inputs: recessed dot-matrix display – unlit grid, text = lit blue dots */
 .panel input[type="text"],
 .panel input[type="number"] {
   width: 100%;
   max-width: 100%;
   padding: 0.5rem 0.65rem;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
+  font-family: 'HD44780', var(--font-mono);
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: var(--led-blue);
+  text-shadow: 0 0 6px var(--led-glow), 0 0 12px var(--led-glow);
   margin-left: 0;
+  border-radius: 4px;
+  border: 1px solid var(--steel-shadow);
+  /* Dot-matrix background: grid of unlit dots (no illumination where no text) */
+  background-color: #060a0c;
+  background-image:
+    radial-gradient(circle at center, var(--dot-matrix-unlit) 1px, transparent 1px);
+  background-size: var(--dot-matrix-grid);
+  background-position: 1px 2px;
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.5),
+    inset 0 -1px 0 rgba(255,255,255,0.03),
+    0 1px 0 rgba(255,255,255,0.05);
+  transition: box-shadow 0.15s;
+}
+
+.panel input[type="text"]::placeholder,
+.panel input[type="number"]::placeholder {
+  color: var(--led-blue-dim);
+  opacity: 0.6;
+}
+
+.panel input[type="text"]:focus,
+.panel input[type="number"]:focus {
+  outline: none;
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.4),
+    inset 0 -1px 0 rgba(255,255,255,0.05),
+    0 1px 0 rgba(255,255,255,0.05),
+    0 0 0 2px var(--accent);
 }
 
 .panel input[type="number"] {
@@ -106,14 +252,52 @@ body {
   min-width: 4ch;
 }
 
-.notes-panel label input[type="text"]:first-of-type {
-  max-width: 6em;
+/* Notes panel: label above input, consistent alignment */
+.notes-panel > label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.notes-panel > label:last-child {
+  margin-bottom: 0;
+}
+
+.notes-panel > label:first-of-type input {
+  width: 8em;
+}
+
+.notes-panel > label:last-of-type input {
+  width: 100%;
+  max-width: 100%;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 0.5rem 1rem;
+}
+
+/* Percents panel: consistent label-above-input alignment in a fixed grid */
+.percents-panel .grid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem 1.25rem;
+}
+
+.percents-panel .grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-start;
+  margin-bottom: 0;
+}
+
+.percents-panel .grid label input {
+  width: 5ch;
+  min-width: 5ch;
+  box-sizing: content-box;
 }
 
 .params-row {
@@ -127,6 +311,39 @@ body {
   margin-bottom: 0;
 }
 
+/* Parameters panel: fixed 4-column grid, label above input */
+.params-panel .params-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.params-panel .params-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-start;
+}
+
+.params-panel .params-row input[type="number"] {
+  width: 5ch;
+  min-width: 5ch;
+  box-sizing: content-box;
+}
+
+.params-panel .params-row #instrumentNumber {
+  width: 4ch;
+  min-width: 4ch;
+}
+
+/* Checkboxes: 2-column grid for alignment */
+.params-panel .checkboxes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem 1.25rem;
+}
+
 .checkboxes {
   display: flex;
   flex-wrap: wrap;
@@ -138,13 +355,17 @@ body {
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0;
+  color: var(--steel-shine);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5), 0 -1px 1px rgba(0,0,0,0.35);
 }
 
 .checkbox input {
   width: auto;
   margin: 0;
+  accent-color: var(--steel-base);
 }
 
+/* Buttons: convex metal */
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -152,44 +373,121 @@ body {
   gap: 0.75rem;
 }
 
+/* Actions panel: Seed as label above input, align with buttons */
+.actions-panel .actions {
+  align-items: flex-end;
+}
+
+.actions-panel .seed-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-start;
+  margin-bottom: 0;
+}
+
+.actions-panel .seed-label input {
+  width: 12ch;
+  min-width: 12ch;
+  box-sizing: content-box;
+}
+
 .btn {
   font-family: var(--font-sans);
   font-size: 0.9rem;
   font-weight: 600;
   padding: 0.5rem 1rem;
-  border: none;
+  border: 1px solid var(--bevel-dark);
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: box-shadow 0.15s, transform 0.1s;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  box-shadow:
+    inset 0 1px 0 var(--bevel-light),
+    0 2px 3px rgba(0,0,0,0.25);
 }
 
+.btn:hover {
+  box-shadow:
+    inset 0 1px 0 var(--bevel-light),
+    0 3px 6px rgba(0,0,0,0.3);
+}
+
+.btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.3),
+    0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Primary: metallic accent (blue-steel) */
 .btn-primary {
-  background: var(--accent);
-  color: var(--bg);
+  background: linear-gradient(180deg,
+    var(--accent-light) 0%,
+    var(--accent) 30%,
+    var(--accent-dark) 100%
+  );
+  color: #fff;
+  border-color: rgba(0,0,0,0.3);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.3);
 }
 
 .btn-primary:hover {
-  background: var(--accent-hover);
+  background: linear-gradient(180deg,
+    #8ec4d4 0%,
+    var(--accent-light) 30%,
+    var(--accent) 100%
+  );
 }
 
+.btn-primary:active {
+  background: linear-gradient(180deg,
+    var(--accent-dark) 0%,
+    var(--accent) 70%,
+    var(--accent-dark) 100%
+  );
+}
+
+/* Secondary: brushed steel button */
 .btn-secondary {
-  background: var(--border);
-  color: var(--text);
+  background: linear-gradient(180deg,
+    var(--steel-highlight) 0%,
+    var(--steel-base) 25%,
+    var(--steel-mid) 50%,
+    var(--steel-base) 75%,
+    var(--steel-dark) 100%
+  );
+  color: var(--steel-shadow);
 }
 
 .btn-secondary:hover {
-  background: #3d3847;
+  background: linear-gradient(180deg,
+    var(--steel-shine) 0%,
+    var(--steel-light) 25%,
+    var(--steel-base) 50%,
+    var(--steel-light) 75%,
+    var(--steel-mid) 100%
+  );
 }
 
 .btn-small {
   font-size: 0.8rem;
   padding: 0.35rem 0.65rem;
-  background: var(--border);
-  color: var(--text);
+  background: linear-gradient(180deg,
+    var(--steel-highlight) 0%,
+    var(--steel-base) 50%,
+    var(--steel-dark) 100%
+  );
+  color: var(--steel-shadow);
+  border-color: var(--bevel-dark);
 }
 
 .btn-small:hover {
-  background: #3d3847;
+  background: linear-gradient(180deg,
+    var(--steel-shine) 0%,
+    var(--steel-light) 50%,
+    var(--steel-mid) 100%
+  );
 }
 
 .seed-label {
@@ -203,6 +501,7 @@ body {
   width: 5ch;
 }
 
+/* Output panel: recessed display */
 .output-panel {
   min-height: 120px;
 }
@@ -219,29 +518,41 @@ body {
 }
 
 .output {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  line-height: 1.4;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  font-family: 'HD44780', var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
   padding: 0.75rem 1rem;
   margin: 0;
   overflow: auto;
   max-height: 280px;
   white-space: pre-wrap;
   word-break: break-all;
-  color: var(--muted);
+  color: var(--led-blue);
+  text-shadow: 0 0 4px var(--led-glow), 0 0 8px var(--led-glow);
+  /* Dot-matrix display well – unlit grid background */
+  background-color: #050809;
+  background-image:
+    radial-gradient(circle at center, var(--dot-matrix-unlit) 1px, transparent 1px);
+  background-size: var(--dot-matrix-grid);
+  background-position: 1px 2px;
+  border: 1px solid rgba(0,0,0,0.5);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 2px 6px rgba(0,0,0,0.5),
+    inset 0 -1px 0 rgba(255,255,255,0.03);
 }
 
 .output:empty::before {
   content: 'Generate to see Renoise pattern XML here.';
-  color: var(--muted);
+  color: var(--led-blue-dim);
+  opacity: 0.8;
 }
 
 .message {
   margin: 0.5rem 0 0;
   font-size: 0.9rem;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.3);
 }
 
 .message.success {
