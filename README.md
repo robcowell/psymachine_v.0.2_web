@@ -1,5 +1,7 @@
 # Psymachine v.0.2 — Web App (Heroku)
 
+Once upon a time there was a coder/scener called [Arguru](https://en.wikipedia.org/wiki/Juan_Antonio_Arguelles_Rius). He developed many cool music tools, including NoiseTrekker - and this evolved into Renoise. Amongst other tools he wrote, was PsyMachine - a psytrance pattern generator for Renoise. Sadly, Arguru died in a car crash in 2007, but I've ported PsyMachine to a nodeJS web app now
+
 Web version of Psymachine: generates Renoise pattern XML from notes, percents, and parameters. Same logic as the original C++/FLTK desktop app.
 
 ## Run locally
