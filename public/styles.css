@@ -164,7 +164,7 @@ body::before {
     var(--steel-base) 92%,
     var(--steel-dark) 100%
   );
-  overflow: hidden;
+  overflow: visible;
 }
 
 .panel::after {
@@ -311,11 +311,30 @@ body::before {
   font-size: 0.95rem;
   padding: 0.4rem 0.6rem;
   min-width: 8em;
-  background: var(--steel-shadow);
-  border: 1px solid var(--steel-dark);
   border-radius: 4px;
+  border: 1px solid var(--steel-shadow);
   color: var(--led-blue);
+  text-shadow: 0 0 6px var(--led-glow), 0 0 12px var(--led-glow);
   cursor: pointer;
+  /* Match recessed dot-matrix style of base note / other text inputs */
+  background-color: #060a0c;
+  background-image:
+    radial-gradient(circle at center, var(--dot-matrix-unlit) 1px, transparent 1px);
+  background-size: var(--dot-matrix-grid);
+  background-position: 1px 2px;
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.5),
+    inset 0 -1px 0 rgba(255,255,255,0.03),
+    0 1px 0 rgba(255,255,255,0.05);
+}
+
+.scale-finder select:focus {
+  outline: none;
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.4),
+    inset 0 -1px 0 rgba(255,255,255,0.05),
+    0 1px 0 rgba(255,255,255,0.05),
+    0 0 0 2px var(--accent);
 }
 
 .scale-finder #scaleNotesDisplay {
@@ -323,14 +342,25 @@ body::before {
   margin-bottom: 0.6rem;
 }
 
+/* Scale finder text input: same recessed dot-matrix as base note (avoid faded look) */
+.scale-finder input[type="text"] {
+  background-color: #060a0c;
+  background-image:
+    radial-gradient(circle at center, var(--dot-matrix-unlit) 1px, transparent 1px);
+  background-size: var(--dot-matrix-grid);
+  background-position: 1px 2px;
+  color: var(--led-blue);
+  text-shadow: 0 0 6px var(--led-glow), 0 0 12px var(--led-glow);
+}
+
 .chord-grid-header {
   font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--steel-shine);
+  color: var(--led-blue);
+  text-shadow: 0 0 6px var(--led-glow), 0 0 12px var(--led-glow);
   margin-bottom: 0.4rem;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.5), 0 -1px 1px rgba(0,0,0,0.35);
 }
 
 .chord-grid {
@@ -352,40 +382,53 @@ body::before {
 .chord-column .roman {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--steel-shine);
-  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  color: var(--led-blue);
+  text-shadow: 0 0 6px var(--led-glow), 0 0 12px var(--led-glow);
 }
 
 .chord-btn {
   font-family: 'HD44780', var(--font-mono);
   font-size: 0.7rem;
   padding: 0.3rem 0.4rem;
-  background: var(--steel-inset);
-  border: 1px solid var(--bevel-dark);
   border-radius: 4px;
+  border: 1px solid var(--steel-shadow);
   color: var(--led-blue);
+  text-shadow: 0 0 6px var(--led-glow), 0 0 12px var(--led-glow);
   cursor: pointer;
   text-align: center;
   white-space: nowrap;
-  transition: background 0.15s, box-shadow 0.15s;
+  transition: box-shadow 0.15s;
+  /* Dot-matrix background like other inputs */
+  background-color: #060a0c;
+  background-image:
+    radial-gradient(circle at center, var(--dot-matrix-unlit) 1px, transparent 1px);
+  background-size: var(--dot-matrix-grid);
+  background-position: 1px 2px;
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.5),
+    inset 0 -1px 0 rgba(255,255,255,0.03),
+    0 1px 0 rgba(255,255,255,0.05);
 }
 
 .chord-btn:hover {
-  background: var(--steel-mid);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.4),
+    inset 0 -1px 0 rgba(255,255,255,0.05),
+    0 1px 0 rgba(255,255,255,0.05);
 }
 
 .chord-btn.selected {
-  background: rgba(0, 212, 255, 0.2);
   border-color: var(--led-blue);
   color: var(--led-blue);
+  text-shadow: 0 0 6px var(--led-glow), 0 0 12px var(--led-glow);
+  background-color: rgba(0, 212, 255, 0.15);
   box-shadow: 0 0 8px var(--led-glow), inset 0 0 8px rgba(0, 212, 255, 0.15);
 }
 
 .chord-info {
   font-size: 0.8rem;
-  color: var(--steel-highlight);
-  text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+  color: var(--led-blue);
+  text-shadow: 0 0 6px var(--led-glow), 0 0 12px var(--led-glow);
   min-height: 1.2em;
 }
 
