@@ -8,10 +8,14 @@
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "corpus:build": "node scripts/build-corpus-profile.js",
+    "corpus:apply": "node scripts/apply-corpus-profile.js",
+    "corpus:eval": "node scripts/evaluate-generation.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "jszip": "^3.10.1"
+    "jszip": "^3.10.1",
+    "midi-file": "^1.2.4"
   }
 }

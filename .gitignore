@@ -41,3 +41,6 @@ node_modules/qs/test/parse.js
 node_modules/qs/test/stringify.js
 node_modules/qs/test/utils.js
 package-lock.json
+data/dms-corpus/
+data/corpus-profile.json
+.cursor/skills/dance-music-manual/_extract/

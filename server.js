@@ -6,7 +6,6 @@ const { getSectionTimeline } = require('./lib/arrangement');
 const { listStyles, isBarBasedStyle, getBarSectionTimeline, energyToTrackDensities } = require('./lib/composition');
 const { createCompositionContext } = require('./lib/composition/composition-context');
 const { listInstrumentPresets } = require('./lib/instrument-presets');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
