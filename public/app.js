@@ -100,15 +100,24 @@
       noteOnFirstTick: document.getElementById(ids.noteOnFirstTick).checked,
       scaleKey: keySelect ? keySelect.value : 'E',
       scaleMode: scaleSelect ? scaleSelect.value : '12',
-      arrangement: document.getElementById(ids.arrangement)?.value || 'classic',
+      arrangement: document.getElementById(ids.arrangement)?.value || 'progressive',
       bassStyle: document.getElementById(ids.bassStyle)?.value || 'rolling',
       bassVariationP: document.getElementById(ids.bassVariationP)?.value || '25',
       openHatP: document.getElementById(ids.openHatP)?.value || '25',
       hatSkipP: document.getElementById(ids.hatSkipP)?.value || '12',
       snareRollP: document.getElementById(ids.snareRollP)?.value || '30',
       useClap: document.getElementById(ids.useClap)?.checked !== false,
-      tracks: getTracksConfig()
+      tracks: getTracksConfig(),
+      selectedChords: getSelectedChordsPayload()
     };
+  }
+
+  function getSelectedChordsPayload() {
+    if (typeof ScaleData === 'undefined') return [];
+    return [...selectedChords].map((key) => {
+      const [chordRootNote, chordIdx] = key.split(',').map(Number);
+      return { chordRootNote, chordIdx };
+    }).filter((c) => c.chordRootNote >= 1 && Number.isFinite(c.chordIdx));
   }
 
   function setParams(p) {
@@ -582,12 +591,32 @@
         select.appendChild(o);
       });
       select.value = 'progressive';
+      syncStyleDefaultsFromArrangement();
       updateArrangementDesc();
       select.addEventListener('change', () => {
+        syncStyleDefaultsFromArrangement();
         updateArrangementDesc();
         updateTimeline();
       });
     } catch (_) {}
+  }
+
+  function syncStyleDefaultsFromArrangement() {
+    const id = document.getElementById(ids.arrangement)?.value;
+    const bassEl = document.getElementById(ids.bassStyle);
+    if (!bassEl || !id) return;
+    if (bassEl.dataset.userSet === '1') return;
+    if (id === 'fullOn') bassEl.value = 'rolling';
+    else if (id === 'progressive') bassEl.value = 'offbeat';
+  }
+
+  function bindBassStyleUserOverride() {
+    const bassEl = document.getElementById(ids.bassStyle);
+    if (!bassEl || bassEl.dataset.bound) return;
+    bassEl.dataset.bound = '1';
+    bassEl.addEventListener('change', () => {
+      bassEl.dataset.userSet = '1';
+    });
   }
 
   function updateArrangementDesc() {
@@ -687,5 +716,6 @@
   });
 
   initArrangements();
+  bindBassStyleUserOverride();
   setMode('song');
 })();
