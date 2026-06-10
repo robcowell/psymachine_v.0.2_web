@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RenoiseSong doc_version="66">
+  <GlobalSongData>
+    <BeatsPerMin>80</BeatsPerMin>
+    <LinesPerBeat>4</LinesPerBeat>
+    <TicksPerLine>12</TicksPerLine>
+    <SignatureNumerator>4</SignatureNumerator>
+    <SignatureDenominator>4</SignatureDenominator>
+    <MetronomeBeatsPerBar>4</MetronomeBeatsPerBar>
+    <MetronomeLinesPerBeat>0</MetronomeLinesPerBeat>
+    <ShuffleIsActive>false</ShuffleIsActive>
+    <ShuffleAmounts>
+      <ShuffleAmount>0</ShuffleAmount>
+      <ShuffleAmount>0</ShuffleAmount>
+      <ShuffleAmount>0</ShuffleAmount>
+      <ShuffleAmount>0</ShuffleAmount>
+    </ShuffleAmounts>
+    <Octave>3</Octave>
+    <LoopCoeff>4</LoopCoeff>
+    <SongName>Untitled</SongName>
+    <Artist>Somebody</Artist>
+    <ShowSongCommentsAfterLoading>false</ShowSongCommentsAfterLoading>
+    <ShowUsedAutomationsOnly>false</ShowUsedAutomationsOnly>
+    <FollowAutomations>true</FollowAutomations>
+    <SampleOffsetCompatibilityMode>false</SampleOffsetCompatibilityMode>
+    <PitchEffectsCompatibilityMode>false</PitchEffectsCompatibilityMode>
+    <GlobalTrackHeadroom>0.501187205</GlobalTrackHeadroom>
+    <PlaybackEngineVersion>6</PlaybackEngineVersion>
+    <RenderSelectionNameCounter>0</RenderSelectionNameCounter>
+    <RecordSampleNameCounter>0</RecordSampleNameCounter>
+    <NewSampleNameCounter>0</NewSampleNameCounter>
+  </GlobalSongData>
+  <RecordManager>
+    <LinkedTrackIndex>-1</LinkedTrackIndex>
+  </RecordManager>
+  

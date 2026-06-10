@@ -1,6 +1,6 @@
 {
   "name": "Psymachine",
-  "description": "Renoise pattern generator (Psymachine v.0.2)",
+  "description": "Psytrance song & pattern generator for Renoise (Psymachine v.0.3)",
   "repository": "https://github.com/your-username/psymachine",
   "keywords": ["renoise", "pattern", "generator", "music"],
   "buildpacks": [

@@ -1,7 +1,7 @@
 {
   "name": "psymachine-web",
-  "version": "0.2.0",
-  "description": "Psymachine v.0.2 - Renoise pattern generator web app",
+  "version": "0.3.0",
+  "description": "Psymachine v.0.3 - Psytrance song & pattern generator for Renoise",
   "main": "server.js",
   "engines": {
     "node": ">=18.x"
@@ -11,6 +11,7 @@
     "dev": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "jszip": "^3.10.1"
   }
 }

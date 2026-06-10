@@ -1,0 +1,86 @@
+<SequencerSendTrack type="SequencerSendTrack">
+      <Name>S01</Name>
+      <Color>125,38,144</Color>
+      <ColorBlend>0.0</ColorBlend>
+      <State>Active</State>
+      <Soloed>false</Soloed>
+      <NoteColumnStates>
+        <NoteColumnState>Active</NoteColumnState>
+        <NoteColumnState>Active</NoteColumnState>
+        <NoteColumnState>Active</NoteColumnState>
+        <NoteColumnState>Active</NoteColumnState>
+        <NoteColumnState>Active</NoteColumnState>
+        <NoteColumnState>Active</NoteColumnState>
+        <NoteColumnState>Active</NoteColumnState>
+        <NoteColumnState>Active</NoteColumnState>
+        <NoteColumnState>Active</NoteColumnState>
+        <NoteColumnState>Active</NoteColumnState>
+        <NoteColumnState>Active</NoteColumnState>
+        <NoteColumnState>Active</NoteColumnState>
+      </NoteColumnStates>
+      <NoteColumnNames>
+        <NoteColumnName/>
+        <NoteColumnName/>
+        <NoteColumnName/>
+        <NoteColumnName/>
+        <NoteColumnName/>
+        <NoteColumnName/>
+        <NoteColumnName/>
+        <NoteColumnName/>
+        <NoteColumnName/>
+        <NoteColumnName/>
+        <NoteColumnName/>
+        <NoteColumnName/>
+      </NoteColumnNames>
+      <NumberOfVisibleNoteColumns>0</NumberOfVisibleNoteColumns>
+      <NumberOfVisibleEffectColumns>1</NumberOfVisibleEffectColumns>
+      <VolumeColumnIsVisible>false</VolumeColumnIsVisible>
+      <PanningColumnIsVisible>false</PanningColumnIsVisible>
+      <DelayColumnIsVisible>false</DelayColumnIsVisible>
+      <SampleEffectColumnIsVisible>false</SampleEffectColumnIsVisible>
+      <TrackRouting>0</TrackRouting>
+      <GroupNestingLevel>0</GroupNestingLevel>
+      <TrackDelay>0.0</TrackDelay>
+      <Collapsed>false</Collapsed>
+      <Visible>true</Visible>
+      <FilterDevices>
+        <SelectedPresetName>Init</SelectedPresetName>
+        <SelectedPresetLibrary>Bundled Content</SelectedPresetLibrary>
+        <SelectedPresetIsModified>false</SelectedPresetIsModified>
+        <Devices>
+          <SendTrackMixerDevice type="SendTrackMixerDevice">
+            <CustomDeviceName>Mixer</CustomDeviceName>
+            <IsMaximized>true</IsMaximized>
+            <IsSelected>false</IsSelected>
+            <SelectedPresetName>Init</SelectedPresetName>
+            <SelectedPresetLibrary>Bundled Content</SelectedPresetLibrary>
+            <SelectedPresetIsModified>false</SelectedPresetIsModified>
+            <IsActive>
+              <Value>1.0</Value>
+              <Visualization>Device only</Visualization>
+            </IsActive>
+            <Panning>
+              <Value>0.5</Value>
+              <Visualization>Device only</Visualization>
+            </Panning>
+            <Volume>
+              <Value>1.0</Value>
+              <Visualization>Device only</Visualization>
+            </Volume>
+            <Surround>
+              <Value>0.0</Value>
+              <Visualization>Device only</Visualization>
+            </Surround>
+            <PostPanning>
+              <Value>0.5</Value>
+              <Visualization>Device only</Visualization>
+            </PostPanning>
+            <PostVolume>
+              <Value>1.0</Value>
+              <Visualization>Device only</Visualization>
+            </PostVolume>
+            <SmoothParameterChanges>true</SmoothParameterChanges>
+          </SendTrackMixerDevice>
+        </Devices>
+      </FilterDevices>
+    </SequencerSendTrack>

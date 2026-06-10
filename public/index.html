@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Psymachine v.0.2</title>
+  <title>Psymachine v.0.3</title>
   <link rel="stylesheet" href="/styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,32 +12,133 @@
 <body>
   <div class="app">
     <header class="header">
-      <h1>Psymachine <span class="version">v.0.2</span></h1>
-      <p class="tagline">Renoise pattern generator</p>
+      <h1>Psymachine <span class="version">v.0.3</span></h1>
+      <p class="tagline">Psytrance song &amp; pattern generator for Renoise</p>
     </header>
 
+    <nav class="mode-tabs" role="tablist">
+      <button type="button" class="mode-tab active" data-mode="song" role="tab" aria-selected="true">Full song</button>
+      <button type="button" class="mode-tab" data-mode="lead" role="tab" aria-selected="false">Lead only</button>
+    </nav>
+
     <main class="main">
+      <!-- Key & arrangement -->
+      <section class="panel key-panel">
+        <h2>Key &amp; arrangement</h2>
+        <div class="key-fields">
+          <div class="key-row">
+            <label class="field-label">Key <select id="scaleKey" class="led-select"></select></label>
+            <label class="field-label">Scale <select id="scaleMode" class="led-select"></select></label>
+            <label class="field-label">Arrangement <select id="arrangement" class="led-select"></select></label>
+            <label class="field-label song-only">Bass style
+              <select id="bassStyle" class="led-select">
+                <option value="rolling">Rolling 16ths</option>
+                <option value="offbeat">Offbeat</option>
+                <option value="staccato">Staccato (prog)</option>
+              </select>
+            </label>
+          </div>
+          <label class="field-label field-scale-notes">Scale notes <input type="text" id="scaleNotesDisplay" readonly></label>
+        </div>
+        <div class="arrangement-block song-only">
+          <p id="arrangementDesc" class="arrangement-desc"></p>
+          <div class="timeline-wrap">
+            <div class="timeline-label">Section map</div>
+            <div id="timeline" class="timeline" aria-label="Arrangement timeline"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tracks -->
+      <section class="panel tracks-panel song-only">
+        <h2>Tracks</h2>
+        <p class="panel-hint">Enable tracks and set Renoise instrument slots. The downloaded .xrns opens with these names pre-assigned.</p>
+        <table class="tracks-table">
+          <thead>
+            <tr>
+              <th>On</th>
+              <th>Track</th>
+              <th>Instrument</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody id="tracksTableBody">
+            <tr data-track="lead">
+              <td><input type="checkbox" id="trackLead" checked></td>
+              <td>Lead / Melody</td>
+              <td><input type="text" id="instLead" value="0" class="inst-input" title="Slot 0: Lead Synth"></td>
+              <td class="track-role">Hook motif — sq/wavetable lead</td>
+            </tr>
+            <tr data-track="lead2">
+              <td><input type="checkbox" id="trackLead2" checked></td>
+              <td>Counter Lead</td>
+              <td><input type="text" id="instLead2" value="7" class="inst-input" title="Slot 7: Counter Lead"></td>
+              <td class="track-role">Call-response answer — pluck</td>
+            </tr>
+            <tr data-track="pad">
+              <td><input type="checkbox" id="trackPad" checked></td>
+              <td>Pad</td>
+              <td><input type="text" id="instPad" value="8" class="inst-input" title="Slot 8: Pad"></td>
+              <td class="track-role">Breakdown chords — atmosphere</td>
+            </tr>
+            <tr data-track="bass">
+              <td><input type="checkbox" id="trackBass" checked></td>
+              <td>Bass</td>
+              <td><input type="text" id="instBass" value="1" class="inst-input"></td>
+              <td class="track-role">Offbeat or rolling 16ths — root-led</td>
+            </tr>
+            <tr data-track="kick">
+              <td><input type="checkbox" id="trackKick" checked></td>
+              <td>Kick</td>
+              <td><input type="text" id="instKick" value="2" class="inst-input"></td>
+              <td class="track-role">Four-on-floor (C-4)</td>
+            </tr>
+            <tr data-track="snare">
+              <td><input type="checkbox" id="trackSnare" checked></td>
+              <td>Snare / Clap</td>
+              <td><input type="text" id="instSnare" value="3" class="inst-input"></td>
+              <td class="track-role">Lines 4, 12, 20… (every other kick)</td>
+            </tr>
+            <tr data-track="hihat">
+              <td><input type="checkbox" id="trackHihat" checked></td>
+              <td>Hi-Hats</td>
+              <td><input type="text" id="instHihat" value="4" class="inst-input"></td>
+              <td class="track-role">16ths + open accents (F#4 / A#4)</td>
+            </tr>
+            <tr data-track="fx">
+              <td><input type="checkbox" id="trackFx" checked></td>
+              <td>FX</td>
+              <td><input type="text" id="instFx" value="5" class="inst-input"></td>
+              <td class="track-role">Risers, impacts, sweeps</td>
+            </tr>
+            <tr data-track="perc">
+              <td><input type="checkbox" id="trackPerc"></td>
+              <td>Perc / Crash</td>
+              <td><input type="text" id="instPerc" value="6" class="inst-input"></td>
+              <td class="track-role">Phrase crashes &amp; ride</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Notes & chords -->
       <section class="panel notes-panel">
-        <h2>Notes</h2>
+        <h2>Lead notes</h2>
         <div class="notes-manual">
           <label>Base note <input type="text" id="baseNote" value="E-4" placeholder="E-4"></label>
           <label>Other notes <input type="text" id="otherNotes" value="F-4 A-4 B-4 E-5 F-5 A-5 B-5 E-6" placeholder="F-4 A-4 B-4 …"></label>
         </div>
         <div class="scale-finder">
-          <h3>Scale finder</h3>
-          <div class="scale-finder-row">
-            <label>Key <select id="scaleKey"></select></label>
-            <label>Scale <select id="scaleMode"></select></label>
-          </div>
-          <label>Scale notes <input type="text" id="scaleNotesDisplay" readonly></label>
-          <div class="chord-grid-header">Chords</div>
+          <h3>Chord picker</h3>
+          <div class="chord-grid-header">Chords in scale</div>
           <div id="chordGrid" class="chord-grid" aria-label="Chord selection"></div>
           <div id="chordInfo" class="chord-info" aria-live="polite"></div>
         </div>
       </section>
 
+      <!-- Percents -->
       <section class="panel percents-panel">
-        <h2>Percents</h2>
+        <h2>Lead probabilities</h2>
         <div class="grid">
           <label>Base note % <input type="number" id="baseNoteP" min="0" max="100" value="40"></label>
           <label>Other notes % <input type="number" id="otherNotesP" min="0" max="100" value="50"></label>
@@ -50,23 +151,39 @@
         </div>
       </section>
 
+      <!-- Parameters -->
       <section class="panel params-panel">
         <h2>Parameters</h2>
+        <div class="params-row song-only">
+          <label>Lines per pattern <input type="number" id="linesPerPattern" min="4" value="64"></label>
+          <label>Pattern count <input type="number" id="patternCount" min="1" max="256" value="32"></label>
+          <label>Target length (min) <input type="number" id="songMinutes" min="0.5" step="0.5" value="4" title="Updates pattern count to match this length"></label>
+          <label>BPM <input type="number" id="bpm" min="60" max="200" value="145"></label>
+        </div>
         <div class="params-row">
-          <label>Track length <input type="number" id="trackLen" min="1" value="64"></label>
+          <label id="trackLenLabel" class="lead-only">Pattern length <input type="number" id="trackLen" min="4" value="64"></label>
           <label>Arpeggio length <input type="number" id="arpeggioLen" min="1" value="16"></label>
-          <label>Instrument number <input type="text" id="instrumentNumber" value="0"></label>
-          <label>Ticks per beat <input type="number" id="ticksPerBeat" min="1" value="8"></label>
+          <label id="instSingleLabel">Instrument <input type="text" id="instrumentNumber" value="0"></label>
+          <label>Lines per beat <input type="number" id="ticksPerBeat" min="1" value="4" title="Full song exports always use 4 LPB in Renoise"></label>
+        </div>
+        <p id="durationEstimate" class="duration-estimate song-only" aria-live="polite"></p>
+        <div class="params-row song-only">
+          <label>Bass variation % <input type="number" id="bassVariationP" min="0" max="100" value="25"></label>
+          <label>Open hat % <input type="number" id="openHatP" min="0" max="100" value="25"></label>
+          <label>Hat skip % <input type="number" id="hatSkipP" min="0" max="100" value="12"></label>
+          <label>Snare roll % <input type="number" id="snareRollP" min="0" max="100" value="30"></label>
         </div>
         <div class="checkboxes">
           <label class="checkbox"><input type="checkbox" id="noteOffOnBeat"> Note off on beat</label>
           <label class="checkbox"><input type="checkbox" id="noteOnFirstTick"> Note on first tick</label>
+          <label class="checkbox song-only"><input type="checkbox" id="useClap" checked> Use clap layer</label>
         </div>
       </section>
 
+      <!-- Actions -->
       <section class="panel actions-panel">
         <div class="actions">
-          <button type="button" id="btnGenerate" class="btn btn-primary">Generate</button>
+          <button type="button" id="btnGenerate" class="btn btn-primary">Generate &amp; download .xrns</button>
           <label class="seed-label">Seed <input type="number" id="seed" value="0" step="1"></label>
           <button type="button" id="btnRandomize" class="btn btn-secondary">Randomize</button>
           <button type="button" id="btnSavePreset" class="btn btn-secondary">Save preset</button>
@@ -75,10 +192,17 @@
         </div>
       </section>
 
+      <!-- Track summary (song mode) -->
+      <section class="panel summary-panel song-only" id="summaryPanel" hidden>
+        <h2>Generated tracks</h2>
+        <div id="trackSummary" class="track-summary"></div>
+      </section>
+
+      <!-- Output -->
       <section class="panel output-panel">
         <div class="output-header">
-          <h2>Renoise XML</h2>
-          <button type="button" id="btnCopy" class="btn btn-small">Copy to clipboard</button>
+          <h2 id="outputTitle">Output</h2>
+          <button type="button" id="btnCopy" class="btn btn-small lead-only">Copy to clipboard</button>
         </div>
         <pre id="output" class="output" aria-live="polite"></pre>
         <p id="message" class="message" role="alert" hidden></p>
