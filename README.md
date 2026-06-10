@@ -2,7 +2,7 @@
 
 Once upon a time there was a coder/scener called [Arguru](https://en.wikipedia.org/wiki/Juan_Antonio_Arguelles_Rius). He developed many cool music tools, including NoiseTrekker — and this evolved into Renoise. Amongst other tools he wrote was PsyMachine — a psytrance pattern generator for Renoise. Sadly, Arguru died in a car crash in 2007, but I've ported PsyMachine to a Node.js web app.
 
-**v.0.3** evolves the original single-pattern melody generator into a **full composition engine**: multi-track, multi-pattern Renoise songs with bar-accurate arrangements, top-down motif composition, harmonic layers, and named instrument slots in exported `.xrns` files. **Lead only** mode still exports single-pattern clipboard XML (legacy Arguru workflow).
+**v.0.3** evolves the original single-pattern melody generator into a **full composition engine**: multi-track, multi-pattern Renoise songs with bar-accurate arrangements, top-down motif composition, harmonic layers, **pattern archetype rhythms**, and named instrument slots in exported `.xrns` files. **Lead only** mode still exports single-pattern clipboard XML (legacy Arguru workflow).
 
 ## Run locally
 
@@ -54,10 +54,10 @@ Open http://localhost:3000 (or the port shown in the console; Heroku sets `PORT`
 | Slot | Track | Role |
 |------|-------|------|
 | 0 | Lead / Melody | Main hook motif — sq/wavetable lead |
-| 1 | Bass | Offbeat or rolling 16ths — root-led psy bass |
+| 1 | Bass | B* archetype rhythms — offbeat, rolling, bounce, or sparse (notes mapped after rhythm) |
 | 2 | Kick | Four-on-the-floor (C-4) |
-| 3 | Snare / Clap | Lines 4, 12, 20… — every other kick at 4 LPB |
-| 4 | Hi-Hats | 16ths + open accents (F#-4 / A#-4) |
+| 3 | Snare / Clap | C* archetype backbeats and build patterns |
+| 4 | Hi-Hats | H* archetype stacks — progressive offbeat, open driver, fills (F#-4 / A#-4) |
 | 5 | FX | Risers, impacts, sweeps |
 | 6 | Perc / Crash | Phrase crashes, ride (off by default) |
 | 7 | Counter Lead | Call-response answer — pluck / acid |
@@ -73,13 +73,14 @@ Bar-based arrangements (**Progressive**, **Full-On**) use a top-down pipeline:
 Track → Sections → Phrases → Motifs → Notes
 ```
 
+- **Pattern archetypes** — Rhythms are not invented from scratch. Each pattern selects from a library of proven psytrance archetypes (H1–H5 hats, C1–C3 claps, P1–P4 percussion, B1–B4 bass, L1–L5 lead rhythms), combines compatible bundles per section, and evolves them every 4 bars. One coordinated `RhythmPlan` drives bass, drums, hats, perc, and lead onset timing together.
 - **Parent motif** — A 2-bar melodic DNA is generated first (contour → scale degrees → rhythm → notes). ~90% of lead material derives from this motif and its variants.
 - **Motif family** — Transpositions, reversals, octave shifts, and rhythmic mutations of the parent motif across sections.
-- **Phrase structure** — Phrases are built from motif cells with section-aware density.
+- **Phrase structure** — Phrases are built from motif cells (AABA, AA′A″, ABAC, etc.) with section-aware density. L4/L5 call–response archetypes map to A/B phrase slots.
 - **Counter lead** — Harmonic complement that fills gaps in the main lead (real counterpoint, not a copy).
 - **Chord engine** — Section chord progressions drive pad voicings and harmonic context.
-- **Energy curve** — Each section has an energy level (0–100) that maps to per-track density and lead probability.
-- **Section objectives** — Breakdowns, themes, climax, etc. control which layers are active.
+- **Energy curve** — Each section has an energy level (0–100) that gates which archetypes are allowed and maps to per-track density.
+- **Section objectives** — Breakdowns, themes, climax, etc. control which layers and archetype bundles are active.
 
 After generation, the UI shows composition metadata: style, total bars, parent motif pitch sequence, motif family variants, and chord progression.
 
@@ -98,16 +99,41 @@ Pattern count is derived automatically from the bar timeline when left blank. Th
 - **Minimal / Progressive** — Gradual layer addition
 - **Single Loop** — All tracks at full density (good for 1-pattern loops)
 
-Legacy arrangements use the original Arguru `generateMelodyCells` algorithm for the lead track.
+Legacy arrangements use the original Arguru `generateMelodyCells` algorithm for the lead track when no parent motif is present. Bass, snare, hats, and perc still route through the archetype system using pseudo-energy derived from section density.
+
+### Pattern archetype system
+
+Rhythms are defined as **16th-step grids** (one bar = 16 positions) and rendered to Renoise line indices at 4 LPB. Archetypes are selected per section, not per track in isolation.
+
+| Category | IDs | Examples |
+|----------|-----|----------|
+| Hat | H1–H5 | H1 standard progressive offbeat, H2 open driver, H3 double pickup, H4 rolling groove, H5 energy hat |
+| Clap | C1–C3 | C1 standard backbeat, C2 build pattern, C3 breakdown accent |
+| Perc | P1–P4 | P1 tribal progressive, P2 rolling, P3 gallop, P4 syncopated |
+| Bass | B1–B4 | B1 progressive offbeat, B2 classic rolling, B3 bounce, B4 sparse breakdown |
+| Lead rhythm | L1–L5 | L1 anthemic hook, L2 syncopated, L3 triplet energy, L4 call, L5 response |
+
+**Energy gates** narrow the pool as sections build:
+
+- **0–25** — H1, C3, P1, B4 (sparse intro)
+- **25–50** — + H2, C1, B1, L1 (groove established)
+- **50–75** — + H3, P2, L2 (development)
+- **75–100** — all archetypes (climax density)
+
+**Section lifecycle** further constrains bundles (e.g. Intro → H1 only; Groove → H1+H2+B1; Climax → H1+H2+H5+P2+B1+L1+L2; Breakdown → sparse C3).
+
+**Evolution** — Every 4 bars, a 20–40% chance applies controlled mutations (remove/add/shift hits, open↔closed hat swap). 8-bar fills and fingerprint anti-repeat prevent identical loops across patterns.
+
+Kick remains fixed four-on-the-floor. `K` in bass archetype notation is groove reference only (not written to the kick track).
 
 ### Groove rules
 
-At **4 lines per beat** (LPB), bar-based songs enforce a consistent psytrance groove:
+At **4 lines per beat** (LPB), songs enforce a consistent psytrance groove via archetypes:
 
 - **Kick** — Every quarter note (lines 0, 4, 8, 12…). Never randomly thinned when active.
-- **Snare / clap** — Lines 4, 12, 20, 28… (beats 2 & 4, layered on every other kick).
-- **Bass** — Offbeat or rolling 16ths depending on style; 16th push/tail when dense. Not randomly thinned when active.
-- **Hi-hats** — 16th closed hats with open accents on offbeats.
+- **Snare / clap** — Rendered from C* archetypes (default C1 backbeat on beats 2 & 4); optional ghost hits and phrase-end rolls at higher energy.
+- **Bass** — Rhythm from B* archetypes; root/fifth/passing notes placed on bass hits only (notes second). Not randomly thinned when active.
+- **Hi-hats** — Stacked H* archetypes merged (open overrides closed on collision), then evolved per pattern.
 
 Non-melodic tracks (kick, bass, drums, pads, chords) use **octave 4** note triggers; FX uses octave 5.
 
@@ -120,7 +146,7 @@ Non-melodic tracks (kick, bass, drums, pads, chords) use **octave 4** note trigg
 | Lines per pattern | 64 | 4 bars at 4 LPB |
 | Pattern count | auto | From bar timeline or target length in minutes |
 | Target length | 7 min | Used when pattern count is empty |
-| Bass style | offbeat | `offbeat`, `rolling`, or `staccato` |
+| Bass style | offbeat | Legacy fallback when no archetype plan: `offbeat`→B1, `rolling`→B2, `staccato`→B4 |
 | Seed | 0 | Same seed → same bar counts, motif, and patterns |
 
 Song XML is built from modular XRNS templates (`lib/xrns/`) with doc_version 66.
@@ -154,8 +180,16 @@ Manual entry in Base note and Other notes still works alongside the picker.
 lib/
   generator.js              # Original Arguru melody cell algorithm
   song-generator.js         # Full song orchestration
-  bass-generator.js         # Offbeat / rolling / staccato bass
-  drum-generator.js         # Kick, snare/clap, hi-hats, perc
+  bass-generator.js         # B* archetype bass + legacy style fallbacks
+  drum-generator.js         # Kick, archetype snare/clap, hats, perc
+  pattern-archetypes/       # Rhythm archetype library and compositor
+    registry.js             # H/C/P/B/L archetype definitions
+    selector.js             # Energy gates + style weighting
+    section-roles.js        # Section lifecycle bundles
+    compositor.js           # resolveRhythmPlan() — coordinated per-pattern plan
+    render.js               # Archetype grids → Renoise cells
+    evolver.js              # 4-bar mutation, 8-bar fills, anti-repeat
+    legacy.js               # Pseudo-energy for classic/minimal/loop
   fx-generator.js           # FX hits and sparse accents
   music-theory.js           # Note pools, drum triggers, octave conventions
   instrument-presets.js     # Named Renoise slot placeholders
